@@ -19,6 +19,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.1.1] - 2024-01-14
+
+### Changed
+
+- Default client host url now points to a live instance of the server
+
+### Fixed
+
+- Short flag collision between help and histlen options
+
 ## [0.1.0] - 2024-01-14
 
 ### Added
@@ -29,5 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Links
 
-[unreleased]: https://github.com/supleed2/omg-rs/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/supleed2/omg-rs/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/supleed2/omg-rs/releases/tag/v0.1.1
 [0.1.0]: https://github.com/supleed2/omg-rs/releases/tag/v0.1.0
