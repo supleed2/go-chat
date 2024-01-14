@@ -67,7 +67,7 @@ type model struct {
 }
 
 type args struct {
-	Address    string  `arg:"positional" default:"localhost:8000" help:"address to connect to, without ws://" placeholder:"HOST[:PORT]"`
+	Address    string  `arg:"positional" default:"gochat.8bit.lol" help:"address to connect to, without ws://" placeholder:"HOST[:PORT]"`
 	Timestamps showTim `arg:"-t" default:"off" help:"display timestamps of messages, ctrl+t to cycle after startup [off, short, full]" placeholder:"CHOICE"`
 	Nick       *string `arg:"-n" help:"attempt to automatically set nick after connecting"`
 	Password   *string `arg:"-p" help:"password, if required"`
