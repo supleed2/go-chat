@@ -46,7 +46,7 @@ func main() {
 
 	var args struct {
 		Admin   string  `arg:"-a" default:"8bit" help:"admin user nick, allows access to /sudo" placeholder:"NICK"`
-		HistLen uint    `arg:"-h" default:"10" help:"set message history size" placeholder:"N"`
+		HistLen uint    `arg:"-l" default:"10" help:"set message history size" placeholder:"N"`
 		Port    uint    `arg:"positional" default:"0" help:"port to listen on, random available port if not set"`
 		NickMap *string `arg:"-n" help:"path to nick:pass JSON file" placeholder:"FILE"`
 	}
