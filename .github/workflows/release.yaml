@@ -1,0 +1,58 @@
+name: Release
+permissions:
+  contents: write
+on:
+  push:
+    tags:
+      - v[0-9]+.*
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Publish Release with Changelog
+        uses: taiki-e/create-gh-release-action@v1
+        with:
+          changelog: changelog.md
+          token: ${{ secrets.GITHUB_TOKEN }}
+  build-binaries:
+    name: Build and Upload Binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-os: [darwin, linux, windows]
+        go-arch: [amd64, arm64]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "stable"
+      - name: Go Vet
+        run: go vet ./...
+      - name: Go Build
+        run: |
+          go build -v -o ./go-chat ./client
+          go build -v -o ./go-chat-server ./server
+        env:
+          GOOS: ${{ matrix.go-os }}
+          GOARCH: ${{ matrix.go-arch }}
+      - name: Archive Binaries (Tar)
+        if: ${{ matrix.go-os != 'windows' }}
+        run: |
+          tar -czvf ./go-chat-client-${{ matrix.go-os }}-${{ matrix.go-arch }}.tar.gz --remove-files ./go-chat
+          tar -czvf ./go-chat-server-${{ matrix.go-os }}-${{ matrix.go-arch }}.tar.gz --remove-files ./go-chat-server
+      - name: Archive Binaries (Zip)
+        if: ${{ matrix.go-os == 'windows' }}
+        run: |
+          mv go-chat go-chat.exe
+          mv go-chat-server go-chat-server.exe
+          zip -m ./go-chat-client-${{ matrix.go-os }}-${{ matrix.go-arch }}.zip ./go-chat.exe
+          zip -m ./go-chat-server-${{ matrix.go-os }}-${{ matrix.go-arch }}.zip ./go-chat-server.exe
+      - name: Upload Binaries
+        run: gh release upload "${{ github.ref_name }}" go-chat-* --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
