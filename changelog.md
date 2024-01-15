@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.1.2] - 2024-01-14
+
+### Changed
+
+- Server redirects non-upgrade http requests
+
 ## [0.1.1] - 2024-01-14
 
 ### Changed
@@ -39,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Links
 
-[unreleased]: https://github.com/supleed2/omg-rs/compare/v0.1.1...HEAD
+[unreleased]: https://github.com/supleed2/omg-rs/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/supleed2/omg-rs/releases/tag/v0.1.2
 [0.1.1]: https://github.com/supleed2/omg-rs/releases/tag/v0.1.1
 [0.1.0]: https://github.com/supleed2/omg-rs/releases/tag/v0.1.0

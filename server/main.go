@@ -106,6 +106,11 @@ func run(addr string, nickMap map[string]string, admin string, rhlen int, log *l
 }
 
 func (s server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.ProtoAtLeast(1, 1) && !hasUpgradeHeader(r.Header) {
+		http.Redirect(w, r, "https://github.com/supleed2/go-chat", http.StatusSeeOther)
+		return
+	}
+
 	ctx := r.Context()
 	conn, err := ws.Accept(w, r, nil)
 	if err != nil {
@@ -356,4 +361,17 @@ func alphanumeric(s string) bool {
 		}
 	}
 	return true
+}
+
+func hasUpgradeHeader(h http.Header) bool {
+	for _, v := range h["Connection"] {
+		v = strings.TrimSpace(v)
+		for _, t := range strings.Split(v, ",") {
+			t = strings.TrimSpace(t)
+			if strings.EqualFold(t, "Upgrade") {
+				return true
+			}
+		}
+	}
+	return false
 }
