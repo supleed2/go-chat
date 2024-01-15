@@ -73,6 +73,13 @@ type args struct {
 	Password   *string `arg:"-p" help:"password, if required"`
 }
 
+func (a *args) Version() string {
+	return "v0.1.2"
+}
+func (a *args) Description() string {
+	return "Go, chat!\nA basic irc-style chat client, written in Go using bubbletea and websockets"
+}
+
 func main() {
 	ctx := context.Background()
 

@@ -41,15 +41,25 @@ type server struct {
 	nickm map[string]string
 }
 
+type args struct {
+	Admin   string  `arg:"-a" default:"8bit" help:"admin user nick, allows access to /sudo" placeholder:"NICK"`
+	HistLen uint    `arg:"-l" default:"10" help:"set message history size" placeholder:"N"`
+	Port    uint    `arg:"positional" default:"0" help:"port to listen on, random available port if not set"`
+	NickMap *string `arg:"-n" help:"path to nick:pass JSON file" placeholder:"FILE"`
+}
+
+func (a *args) Version() string {
+	return "v0.1.2"
+}
+
+func (a *args) Description() string {
+	return "Go, chat! Server\nA basic irc-style chat server, written in Go using websockets"
+}
+
 func main() {
 	log := log.New(os.Stderr, "ws server 🚀 ", log.LstdFlags|log.Lshortfile|log.Lmsgprefix)
 
-	var args struct {
-		Admin   string  `arg:"-a" default:"8bit" help:"admin user nick, allows access to /sudo" placeholder:"NICK"`
-		HistLen uint    `arg:"-l" default:"10" help:"set message history size" placeholder:"N"`
-		Port    uint    `arg:"positional" default:"0" help:"port to listen on, random available port if not set"`
-		NickMap *string `arg:"-n" help:"path to nick:pass JSON file" placeholder:"FILE"`
-	}
+	var args args
 	arg.MustParse(&args)
 
 	nickMap, err := loadNickMap(args.NickMap)

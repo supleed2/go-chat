@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Version flag for client and server binaries
+- Description in help output of client and server binaries
+
 ### Changed
 
 ### Deprecated
