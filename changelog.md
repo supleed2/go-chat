@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Update to [charmbracelet/bubbletea](https://github.com/charmbracelet/bubbletea) v0.26.4 to fix Windows resizing
+
 ### Security
 
 ## [0.1.2] - 2024-01-14
