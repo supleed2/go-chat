@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"slices"
 	"strings"
 	"sync"
 	"time"
@@ -57,6 +58,9 @@ type args struct {
 	Port    uint    `arg:"positional" default:"0" help:"port to listen on, random available port if not set"`
 	NickMap *string `arg:"-n" help:"path to nick:pass JSON file" placeholder:"FILE"`
 }
+
+const createRoomTable = "CREATE TABLE IF NOT EXISTS %s (tim DATETIME, id TEXT, msg TEXT)"
+const insertRoomMsg = "INSERT INTO %v (tim, id, msg) VALUES (:tim, :id, :msg)"
 
 func (a *args) Version() string {
 	return "v0.1.2"
@@ -189,8 +193,8 @@ func (s server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								wsjson.Write(ctx, conn, c.SMsg{Tim: time.Now(), Id: "system", Msg: fmt.Sprintf("Room exists: %v", cmd)})
 							} else {
 								s.dbase.Exec("INSERT INTO rooms (name) VALUES ($1)", cmd[1])
-								s.dbase.Exec(fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (tim DATETIME, id TEXT, msg TEXT)", cmd[1]))
-								s.rooms[cmd[1]] = fmt.Sprintf("insert into %v (tim, id, msg) values (:tim, :id, :msg)", cmd[1])
+								s.dbase.Exec(fmt.Sprintf(createRoomTable, cmd[1]))
+								s.rooms[cmd[1]] = fmt.Sprintf(insertRoomMsg, cmd[1])
 								wsjson.Write(ctx, conn, c.SMsg{Tim: time.Now(), Id: "system", Msg: fmt.Sprintf("Created room: %v", cmd[1])})
 							}
 						} else if cmd[0] == "rm" {
@@ -337,7 +341,52 @@ func (s server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func loadDb(path string, rhlen int) (*sqlx.DB, map[string]string, map[string][]c.SMsg, error) {
-	return nil, nil, nil, fmt.Errorf("loadDb not implemented")
+	db, err := sqlx.Connect("sqlite", path)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS rooms (name TEXT)")
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
+	roomList := []string{}
+	err = db.Select(&roomList, "SELECT * FROM rooms")
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
+	if len(roomList) == 0 {
+		roomList = []string{"general", "test1", "test2"}
+		_, err = db.Exec("INSERT INTO rooms (name) VALUES ('general'), ('test1'), ('test2')")
+		if err != nil {
+			return nil, nil, nil, err
+		}
+	}
+
+	rooms := make(map[string]string)
+	rhist := make(map[string][]c.SMsg)
+
+	for _, room := range roomList {
+		rooms[room] = fmt.Sprintf(insertRoomMsg, room)
+
+		_, err = db.Exec(fmt.Sprintf(createRoomTable, room))
+		if err != nil {
+			return nil, nil, nil, err
+		}
+
+		roomHistory := []c.SMsg{}
+		err = db.Select(&roomHistory, fmt.Sprintf("SELECT * FROM %s ORDER BY tim DESC LIMIT %d", room, rhlen))
+		if err != nil {
+			return nil, nil, nil, err
+		}
+
+		slices.Reverse(roomHistory)
+		rhist[room] = roomHistory
+	}
+
+	return db, rooms, rhist, nil
 }
 
 type nickErr int

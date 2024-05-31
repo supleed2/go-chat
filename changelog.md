@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Description in help output of client and server binaries
 - SQLite Database connection to persist room and message history data
 - Logging message struct and channel + function to make database calls for channel output
+- Database loading + initialisation, restores previous channels and most recent messages on server start
 
 ### Changed
 
