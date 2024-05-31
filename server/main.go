@@ -97,6 +97,7 @@ func run(addr string, nickMap map[string]string, admin string, rhlen int, log *l
 	}
 
 	logCh := make(chan logMsg, 128)
+	defer close(logCh)
 	go logMessage(db, rooms, logCh, log)
 
 	server := &http.Server{
