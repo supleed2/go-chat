@@ -183,7 +183,7 @@ func (s server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				if smsg.Id == s.admin {
 					cmd := strings.Split(cmsg.Msg, " ")
 					if len(cmd) == 2 {
-						if cmd[0] == "mk" {
+						if cmd[0] == "mk" && cmd[1] != "rooms" {
 							if _, ok := s.rooms[cmd[1]]; ok {
 								wsjson.Write(ctx, conn, c.SMsg{Tim: time.Now(), Id: "system", Msg: fmt.Sprintf("Room exists: %v", cmd)})
 							} else {
@@ -207,9 +207,9 @@ func (s server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 									}
 								}
 								s.conns.sm.Unlock()
-								wsjson.Write(ctx, conn, c.SMsg{Tim: time.Now(), Id: "system", Msg: fmt.Sprintf("Deleted room: %v", cmd)})
+								wsjson.Write(ctx, conn, c.SMsg{Tim: time.Now(), Id: "system", Msg: fmt.Sprintf("Deleted room: %v", cmd[1])})
 							} else {
-								wsjson.Write(ctx, conn, c.SMsg{Tim: time.Now(), Id: "system", Msg: fmt.Sprintf("Room does not exist: %v", cmd)})
+								wsjson.Write(ctx, conn, c.SMsg{Tim: time.Now(), Id: "system", Msg: fmt.Sprintf("Room does not exist: %v", cmd[1])})
 							}
 						} else if cmd[0] == "yeet" {
 							found := false
@@ -300,8 +300,7 @@ func (s server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					s.conns.cm[conn] = u
 					s.conns.sm.Unlock()
 					wsjson.Write(ctx, conn, c.SMsg{Tim: time.Now(), Id: "system", Msg: fmt.Sprintf("connected to: %v", u.room)})
-					rhistSize := max(len(s.rhist[u.room])-10, 0)
-					recentHistory := s.rhist[u.room][rhistSize:]
+					recentHistory := s.rhist[u.room]
 					for i := range recentHistory {
 						wsjson.Write(ctx, conn, recentHistory[i])
 					}

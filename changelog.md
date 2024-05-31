@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update to [charmbracelet/bubbletea](https://github.com/charmbracelet/bubbletea) v0.26.4 to fix Windows resizing
 - Remove unnecessary alt-screen commands
+- Server messages from admin commands
 
 ### Security
 
