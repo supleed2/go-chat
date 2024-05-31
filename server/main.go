@@ -63,7 +63,7 @@ const createRoomTable = "CREATE TABLE IF NOT EXISTS %s (tim DATETIME, id TEXT, m
 const insertRoomMsg = "INSERT INTO %v (tim, id, msg) VALUES (:tim, :id, :msg)"
 
 func (a *args) Version() string {
-	return "v0.1.2"
+	return "v0.2.1"
 }
 
 func (a *args) Description() string {

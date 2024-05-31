@@ -74,7 +74,7 @@ type args struct {
 }
 
 func (a *args) Version() string {
-	return "v0.1.2"
+	return "v0.2.1"
 }
 func (a *args) Description() string {
 	return "Go, chat!\nA basic irc-style chat client, written in Go using bubbletea and websockets"
@@ -181,7 +181,7 @@ func initModel(ctx context.Context, conn *ws.Conn, a args, tz time.Location) mod
 		showTim: a.Timestamps,
 		tz:      tz,
 		history: vp,
-		idStyle: lipgloss.NewStyle().Width(30),
+		idStyle: lipgloss.NewStyle(),
 		pStyle:  lipgloss.NewStyle().Bold(true),
 		help:    help.New(),
 		recvCh:  recvCh,
@@ -250,7 +250,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.history.Width = msg.Width
 		m.history.GotoBottom()
 		m.input.Width = msg.Width - 3
-		m.idStyle.Width(msg.Width)
 		m.help.Width = msg.Width - 1
 		m.history.SetContent(m.viewMessages())
 	}
