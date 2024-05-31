@@ -17,6 +17,8 @@ import (
 	c "go-chat/common"
 
 	"github.com/alexflint/go-arg"
+	"github.com/jmoiron/sqlx"
+	_ "modernc.org/sqlite"
 	ws "nhooyr.io/websocket"
 	"nhooyr.io/websocket/wsjson"
 )
@@ -33,16 +35,24 @@ type conns struct {
 
 type server struct {
 	admin string
+	dbase *sqlx.DB
 	logFn func(string, ...interface{})
 	conns *conns
-	rooms map[string]struct{}
+	rooms map[string]string
 	rhist map[string][]c.SMsg
 	rhlen int
+	logCh chan<- logMsg
 	nickm map[string]string
+}
+
+type logMsg struct {
+	Ch  string
+	Msg c.SMsg
 }
 
 type args struct {
 	Admin   string  `arg:"-a" default:"8bit" help:"admin user nick, allows access to /sudo" placeholder:"NICK"`
+	DB      string  `arg:"-d" default:"./go-chat.db" help:"sqlite database to store server data" placeholder:"FILE"`
 	HistLen uint    `arg:"-l" default:"10" help:"set message history size" placeholder:"N"`
 	Port    uint    `arg:"positional" default:"0" help:"port to listen on, random available port if not set"`
 	NickMap *string `arg:"-n" help:"path to nick:pass JSON file" placeholder:"FILE"`
@@ -67,13 +77,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = run("localhost:"+fmt.Sprint(args.Port), nickMap, args.Admin, int(args.HistLen), log)
+	err = run("localhost:"+fmt.Sprint(args.Port), nickMap, args.Admin, int(args.HistLen), log, args.DB)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func run(addr string, nickMap map[string]string, admin string, rhlen int, log *log.Logger) error {
+func run(addr string, nickMap map[string]string, admin string, rhlen int, log *log.Logger, dbPath string) error {
 	listener, err := net.Listen("tcp4", addr)
 	if err != nil {
 		return err
@@ -81,14 +91,24 @@ func run(addr string, nickMap map[string]string, admin string, rhlen int, log *l
 
 	log.Printf("listening on ws://%v", listener.Addr())
 
+	db, rooms, rhist, err := loadDb(dbPath, rhlen)
+	if err != nil {
+		return err
+	}
+
+	logCh := make(chan logMsg, 128)
+	go logMessage(db, rooms, logCh, log)
+
 	server := &http.Server{
 		Handler: server{
 			admin: admin,
+			dbase: db,
 			logFn: log.Printf,
 			conns: &conns{cm: make(map[*ws.Conn]user)},
-			rooms: map[string]struct{}{"general": {}, "test1": {}, "test2": {}},
-			rhist: make(map[string][]c.SMsg),
+			rooms: rooms,
+			rhist: rhist,
 			rhlen: rhlen,
+			logCh: logCh,
 			nickm: nickMap,
 		},
 		ReadTimeout:  10 * time.Second,
@@ -167,12 +187,15 @@ func (s server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							if _, ok := s.rooms[cmd[1]]; ok {
 								wsjson.Write(ctx, conn, c.SMsg{Tim: time.Now(), Id: "system", Msg: fmt.Sprintf("Room exists: %v", cmd)})
 							} else {
-								s.rooms[cmd[1]] = struct{}{}
-								wsjson.Write(ctx, conn, c.SMsg{Tim: time.Now(), Id: "system", Msg: fmt.Sprintf("Created room: %v", cmd)})
+								s.dbase.Exec("INSERT INTO rooms (name) VALUES ($1)", cmd[1])
+								s.dbase.Exec(fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (tim DATETIME, id TEXT, msg TEXT)", cmd[1]))
+								s.rooms[cmd[1]] = fmt.Sprintf("insert into %v (tim, id, msg) values (:tim, :id, :msg)", cmd[1])
+								wsjson.Write(ctx, conn, c.SMsg{Tim: time.Now(), Id: "system", Msg: fmt.Sprintf("Created room: %v", cmd[1])})
 							}
 						} else if cmd[0] == "rm" {
 							if _, ok := s.rooms[cmd[1]]; ok && cmd[1] != "general" {
 								delete(s.rooms, cmd[1])
+								s.dbase.Exec("DELETE FROM rooms WHERE name = $1", cmd[1])
 								s.rhist[cmd[1]] = []c.SMsg{}
 								tim := time.Now()
 								s.conns.sm.Lock()
@@ -227,6 +250,7 @@ func (s server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				s.conns.sm.Unlock()
 				smsg.Tim = time.Now()
 				smsg.Msg = cmsg.Msg
+				s.logCh <- logMsg{room, smsg}
 				if len(s.rhist[room]) < s.rhlen {
 					s.rhist[room] = append(s.rhist[room], smsg)
 				} else {
@@ -312,6 +336,10 @@ func (s server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func loadDb(path string, rhlen int) (*sqlx.DB, map[string]string, map[string][]c.SMsg, error) {
+	return nil, nil, nil, fmt.Errorf("loadDb not implemented")
+}
+
 type nickErr int
 
 const (
@@ -384,4 +412,12 @@ func hasUpgradeHeader(h http.Header) bool {
 		}
 	}
 	return false
+}
+
+func logMessage(db *sqlx.DB, rooms map[string]string, logCh <-chan logMsg, log *log.Logger) {
+	for msg := range logCh {
+		if _, err := db.NamedExec(rooms[msg.Ch], msg.Msg); err != nil {
+			log.Println("logMessage:", err)
+		}
+	}
 }

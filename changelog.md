@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Version flag for client and server binaries
 - Description in help output of client and server binaries
+- SQLite Database connection to persist room and message history data
+- Logging message struct and channel + function to make database calls for channel output
 
 ### Changed
 
