@@ -9,12 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Version flag for client and server binaries
-- Description in help output of client and server binaries
-- SQLite Database connection to persist room and message history data
-- Logging message struct and channel + function to make database calls for channel output
-- Database loading + initialisation, restores previous channels and most recent messages on server start
-
 ### Changed
 
 ### Deprecated
@@ -23,11 +17,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+### Security
+
+## [0.2.0] - 2024-05-31
+
+### Added
+
+- Version flag for client and server binaries
+- Description in help output of client and server binaries
+- SQLite Database connection to persist room and message history data
+- Logging message struct and channel + function to make database calls for channel output
+- Database loading + initialisation, restores previous channels and most recent messages on server start
+
+### Fixed
+
 - Update to [charmbracelet/bubbletea](https://github.com/charmbracelet/bubbletea) v0.26.4 to fix Windows resizing
 - Remove unnecessary alt-screen commands
 - Server messages from admin commands
-
-### Security
 
 ## [0.1.2] - 2024-01-14
 
@@ -53,7 +59,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Go programs for [client](./tui/main.go) and [server](./server/main.go)
 - GitHub Actions release flow, including binaries
 
-[unreleased]: https://github.com/supleed2/go-chat/compare/v0.1.2...HEAD
+[unreleased]: https://github.com/supleed2/go-chat/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/supleed2/go-chat/releases/tag/v0.2.0
 [0.1.2]: https://github.com/supleed2/go-chat/releases/tag/v0.1.2
 [0.1.1]: https://github.com/supleed2/go-chat/releases/tag/v0.1.1
 [0.1.0]: https://github.com/supleed2/go-chat/releases/tag/v0.1.0
