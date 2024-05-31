@@ -201,7 +201,7 @@ func (m model) Init() tea.Cmd {
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	var tiCmd, vpCmd, clCmd, smCmd tea.Cmd
+	var tiCmd, vpCmd, smCmd tea.Cmd
 	m.input, tiCmd = m.input.Update(msg)
 	m.history, vpCmd = m.history.Update(msg)
 
@@ -246,7 +246,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.input.Reset()
 		}
 	case tea.WindowSizeMsg:
-		clCmd = tea.Sequence(tea.ExitAltScreen, tea.EnterAltScreen)
 		m.history.Height = msg.Height - 2
 		m.history.Width = msg.Width
 		m.history.GotoBottom()
@@ -256,7 +255,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.history.SetContent(m.viewMessages())
 	}
 
-	return m, tea.Batch(tiCmd, vpCmd, clCmd, smCmd)
+	return m, tea.Batch(tiCmd, vpCmd, smCmd)
 }
 
 func (m model) View() string {
