@@ -52,6 +52,7 @@ const (
 )
 
 type model struct {
+	kpHist  bool
 	history viewport.Model
 	msgs    []c.SMsg
 	showTim showTim
@@ -67,15 +68,17 @@ type model struct {
 }
 
 type args struct {
-	Address    string  `arg:"positional" default:"gochat.8bit.lol" help:"address to connect to, without ws://" placeholder:"HOST[:PORT]"`
-	Timestamps showTim `arg:"-t" default:"off" help:"display timestamps of messages, ctrl+t to cycle after startup [off, short, full]" placeholder:"CHOICE"`
-	Nick       *string `arg:"-n" help:"attempt to automatically set nick after connecting"`
-	Password   *string `arg:"-p" help:"password, if required"`
+	Address     string  `arg:"positional" default:"gochat.8bit.lol" help:"address to connect to, without ws://" placeholder:"HOST[:PORT]"`
+	KeepHistory bool    `arg:"-k" help:"append chat history when changing rooms, instead of clearing"`
+	Timestamps  showTim `arg:"-t" default:"off" help:"display timestamps of messages, ctrl+t to cycle after startup [off, short, full]" placeholder:"CHOICE"`
+	Nick        *string `arg:"-n" help:"attempt to automatically set nick after connecting"`
+	Password    *string `arg:"-p" help:"password, if required"`
 }
 
 func (a *args) Version() string {
-	return "v0.2.1"
+	return "v0.2.3"
 }
+
 func (a *args) Description() string {
 	return "Go, chat!\nA basic irc-style chat client, written in Go using bubbletea and websockets"
 }
@@ -180,6 +183,7 @@ func initModel(ctx context.Context, conn *ws.Conn, a args, tz time.Location) mod
 		msgs:    messages,
 		showTim: a.Timestamps,
 		tz:      tz,
+		kpHist:  a.KeepHistory,
 		history: vp,
 		idStyle: lipgloss.NewStyle().Width(60),
 		pStyle:  lipgloss.NewStyle().Bold(true),
@@ -230,6 +234,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				} else if text == "ls" {
 					m.sendCh <- c.CMsg{Typ: c.Ls, Msg: ""}
 				} else if text, ok := strings.CutPrefix(text, "cd "); ok {
+					if !m.kpHist {
+						m.msgs = []c.SMsg{}
+					}
 					m.sendCh <- c.CMsg{Typ: c.Cd, Msg: text}
 				} else if text == "who" {
 					m.sendCh <- c.CMsg{Typ: c.Who, Msg: ""}
