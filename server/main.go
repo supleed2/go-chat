@@ -55,6 +55,7 @@ type args struct {
 	Admin   string  `arg:"-a" default:"8bit" help:"admin user nick, allows access to /sudo" placeholder:"NICK"`
 	DB      string  `arg:"-d" default:"./go-chat.db" help:"sqlite database to store server data" placeholder:"FILE"`
 	HistLen uint    `arg:"-l" default:"10" help:"set message history size" placeholder:"N"`
+	Bind    bool    `arg:"-b" default:"false" help:"bind to 0.0.0.0 instead of 127.0.0.1 (localhost)"`
 	Port    uint    `arg:"positional" default:"0" help:"port to listen on, random available port if not set"`
 	NickMap *string `arg:"-n" help:"path to nick:pass JSON file" placeholder:"FILE"`
 }
@@ -81,7 +82,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = run("localhost:"+fmt.Sprint(args.Port), nickMap, args.Admin, int(args.HistLen), log, args.DB)
+	addr := "localhost:"
+	if args.Bind {
+		addr = "0.0.0.0:"
+	}
+
+	err = run(addr+fmt.Sprint(args.Port), nickMap, args.Admin, int(args.HistLen), log, args.DB)
 	if err != nil {
 		log.Fatal(err)
 	}
