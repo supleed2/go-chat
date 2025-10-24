@@ -16,8 +16,8 @@ import (
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	ws "nhooyr.io/websocket"
-	"nhooyr.io/websocket/wsjson"
+	ws "github.com/coder/websocket"
+	"github.com/coder/websocket/wsjson"
 )
 
 const manText string = `The current available commands are:

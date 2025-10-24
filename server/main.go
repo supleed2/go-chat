@@ -18,10 +18,10 @@ import (
 	c "go-chat/common"
 
 	"github.com/alexflint/go-arg"
+	ws "github.com/coder/websocket"
+	"github.com/coder/websocket/wsjson"
 	"github.com/jmoiron/sqlx"
 	_ "modernc.org/sqlite"
-	ws "nhooyr.io/websocket"
-	"nhooyr.io/websocket/wsjson"
 )
 
 type user struct {
