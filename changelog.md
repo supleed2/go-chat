@@ -19,6 +19,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.2.12] - 2025-10-24
+
+### Changed
+
+- No longer errors if the nickname map file doesn't exist
+
+### Fixed
+
+- Docker compose example config: fixed volume mount permissions
+
 ## [0.2.11] - 2025-10-24
 
 ### Added
@@ -132,7 +142,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Go programs for [client](./tui/main.go) and [server](./server/main.go)
 - GitHub Actions release flow, including binaries
 
-[unreleased]: https://github.com/supleed2/go-chat/compare/v0.2.11...HEAD
+[unreleased]: https://github.com/supleed2/go-chat/compare/v0.2.12...HEAD
+[0.2.12]: https://github.com/supleed2/go-chat/releases/tag/v0.2.12
 [0.2.11]: https://github.com/supleed2/go-chat/releases/tag/v0.2.11
 [0.2.10]: https://github.com/supleed2/go-chat/releases/tag/v0.2.10
 [0.2.9]: https://github.com/supleed2/go-chat/releases/tag/v0.2.9

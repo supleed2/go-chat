@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   server:
     # build: .
@@ -7,14 +5,13 @@ services:
     container_name: go-chat
     environment:
       - "ADMIN=${ADMIN}"
-      - "DB=/app/go-chat.db"
+      - "DB=/app/data/go-chat.db"
       - "HIST_LEN=${HIST_LEN:-10}"
       - "BIND=true"
       - "PORT=8080"
-      - "NICK_MAP=/app/nickmap.json"
+      - "NICK_MAP=/app/data/nickmap.json"
     ports:
       - "${PORT}:8080"
     volumes:
-      - ${DB}:/app/go-chat.db:rw
-      - ${NICK_MAP}:/app/nickmap.json:rw
+      - ${DATA}:/app/data:rw
     restart: unless-stopped

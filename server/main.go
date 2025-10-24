@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net"
@@ -438,6 +439,10 @@ func loadNickMap(m *string) (map[string]string, error) {
 	path, err := filepath.Abs(*m)
 	if err != nil {
 		return nil, err
+	}
+
+	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
+		return nm, nil
 	}
 
 	file, err := os.ReadFile(path)
