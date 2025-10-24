@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  server:
+    # build: .
+    image: ghcr.io/supleed2/go-chat:latest
+    container_name: go-server
+    environment:
+      - "ADMIN=${ADMIN}"
+      - "DB=/app/go-chat.db"
+      - "HIST_LEN=${HIST_LEN:-10}"
+      - "BIND=true"
+      - "PORT=8080"
+      - "NICK_MAP=/app/nickmap.json"
+    ports:
+      - "${PORT}:8080"
+    volumes:
+      - ${DB}:/app/go-chat.db
+      - ${NICK_MAP}:/app/nickmap.json
+    restart: unless-stopped
