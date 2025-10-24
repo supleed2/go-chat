@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.2.10] - 2025-10-24
+
+### Fixed
+
+- User in container images has UID and GID 1000
+
 ## [0.2.9] - 2025-10-24
 
 ### Fixed
@@ -119,7 +125,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Go programs for [client](./tui/main.go) and [server](./server/main.go)
 - GitHub Actions release flow, including binaries
 
-[unreleased]: https://github.com/supleed2/go-chat/compare/v0.2.9...HEAD
+[unreleased]: https://github.com/supleed2/go-chat/compare/v0.2.10...HEAD
+[0.2.10]: https://github.com/supleed2/go-chat/releases/tag/v0.2.10
 [0.2.9]: https://github.com/supleed2/go-chat/releases/tag/v0.2.9
 [0.2.8]: https://github.com/supleed2/go-chat/releases/tag/v0.2.8
 [0.2.7]: https://github.com/supleed2/go-chat/releases/tag/v0.2.7

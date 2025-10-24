@@ -4,7 +4,7 @@ services:
   server:
     # build: .
     image: ghcr.io/supleed2/go-chat:latest
-    container_name: go-server
+    container_name: go-chat
     environment:
       - "ADMIN=${ADMIN}"
       - "DB=/app/go-chat.db"
@@ -15,6 +15,6 @@ services:
     ports:
       - "${PORT}:8080"
     volumes:
-      - ${DB}:/app/go-chat.db
-      - ${NICK_MAP}:/app/nickmap.json
+      - ${DB}:/app/go-chat.db:rw
+      - ${NICK_MAP}:/app/nickmap.json:rw
     restart: unless-stopped
