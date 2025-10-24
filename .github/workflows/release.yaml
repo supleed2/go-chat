@@ -79,4 +79,6 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/supleed2/go-chat:${{ github.ref_name }}
+          tags: |
+            ghcr.io/supleed2/go-chat:${{ github.ref_name }}
+            ghcr.io/supleed2/go-chat:latest

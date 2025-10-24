@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.2.9] - 2025-10-24
+
+### Fixed
+
+- Add `latest` tag to container images
+
 ## [0.2.8] - 2025-10-24
 
 ### Fixed
@@ -113,7 +119,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Go programs for [client](./tui/main.go) and [server](./server/main.go)
 - GitHub Actions release flow, including binaries
 
-[unreleased]: https://github.com/supleed2/go-chat/compare/v0.2.8...HEAD
+[unreleased]: https://github.com/supleed2/go-chat/compare/v0.2.9...HEAD
+[0.2.9]: https://github.com/supleed2/go-chat/releases/tag/v0.2.9
 [0.2.8]: https://github.com/supleed2/go-chat/releases/tag/v0.2.8
 [0.2.7]: https://github.com/supleed2/go-chat/releases/tag/v0.2.7
 [0.2.6]: https://github.com/supleed2/go-chat/releases/tag/v0.2.6

@@ -76,7 +76,7 @@ type args struct {
 }
 
 func (a *args) Version() string {
-	return "v0.2.8"
+	return "v0.2.9"
 }
 
 func (a *args) Description() string {
