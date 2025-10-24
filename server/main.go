@@ -64,7 +64,7 @@ const createRoomTable = "CREATE TABLE IF NOT EXISTS %s (tim DATETIME, id TEXT, m
 const insertRoomMsg = "INSERT INTO %v (tim, id, msg) VALUES (:tim, :id, :msg)"
 
 func (a *args) Version() string {
-	return "v0.2.10"
+	return c.Version
 }
 
 func (a *args) Description() string {
@@ -147,6 +147,12 @@ func run(addr string, nickMap map[string]string, admin string, rhlen int, log *l
 }
 
 func (s server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" && r.URL.Path == "/health" {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "go-chat %s is up!", c.Version)
+		return
+	}
+
 	if r.ProtoAtLeast(1, 1) && !hasUpgradeHeader(r.Header) {
 		http.Redirect(w, r, "https://github.com/supleed2/go-chat", http.StatusSeeOther)
 		return

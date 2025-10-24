@@ -2,6 +2,8 @@ package common
 
 import "time"
 
+const Version = "0.2.11"
+
 type SMsg struct {
 	Tim time.Time
 	Id  string
