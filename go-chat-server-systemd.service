@@ -1,0 +1,14 @@
+[Unit]
+Description=go-chat-server service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=$USER
+ExecStart=$PATH_TO_SERVER_BINARY --admin $ADMIN --db $PATH_TO_DB --histlen 50 --nickmap $PATH_TO_JSON --bind --port $PORT
+
+[Install]
+WantedBy=multi-user.target
