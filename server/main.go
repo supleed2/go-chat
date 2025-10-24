@@ -52,12 +52,12 @@ type logMsg struct {
 }
 
 type args struct {
-	Admin   string  `arg:"-a" default:"8bit" help:"admin user nick, allows access to /sudo" placeholder:"NICK"`
-	DB      string  `arg:"-d" default:"./go-chat.db" help:"sqlite database to store server data" placeholder:"FILE"`
-	HistLen uint    `arg:"-l" default:"10" help:"set message history size" placeholder:"N"`
-	Bind    bool    `arg:"-b" default:"false" help:"bind to 0.0.0.0 instead of 127.0.0.1 (localhost)"`
-	Port    uint    `arg:"positional" default:"0" help:"port to listen on, random available port if not set"`
-	NickMap *string `arg:"-n" help:"path to nick:pass JSON file" placeholder:"FILE"`
+	Admin   string  `arg:"-a,env:ADMIN" default:"8bit" help:"admin user nick, allows access to /sudo" placeholder:"NICK"`
+	DB      string  `arg:"-d,env:DB" default:"./go-chat.db" help:"sqlite database to store server data" placeholder:"FILE"`
+	HistLen uint    `arg:"-l,env:HIST_LEN" default:"10" help:"set message history size" placeholder:"N"`
+	Bind    bool    `arg:"-b,env:BIND" default:"false" help:"bind to 0.0.0.0 instead of 127.0.0.1 (localhost)"`
+	Port    uint    `arg:"-p,env:PORT" default:"8080" help:"port to listen on, random available port if not set"`
+	NickMap *string `arg:"-n,env:NICK_MAP" help:"path to nick:pass JSON file" placeholder:"FILE"`
 }
 
 const createRoomTable = "CREATE TABLE IF NOT EXISTS %s (tim DATETIME, id TEXT, msg TEXT)"
