@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.2.7] - 2025-10-24
+
+### Fixed
+
+- Move example systemd unit to avoid error in release
+
 ## [0.2.6] - 2025-10-24
 
 ### Fixed

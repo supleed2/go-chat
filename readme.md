@@ -15,4 +15,4 @@ Example files are provided:
 
 - [Dockerfile](./Dockerfile)
 - [Docker Compose](./docker-compose.yaml)
-- [Systemd Service](./go-chat-server-systemd.service) (replace all $VARIABLES)
+- [Systemd Service](./systemd-go-chat-server.service) (replace all $VARIABLES)
