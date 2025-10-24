@@ -31,14 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dependency updates
 - Port is now a flag rather than positional argument
 
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-
 ## [0.2.4] - 2025-02-23
 
 ### Added
