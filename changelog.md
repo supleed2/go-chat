@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.2.8] - 2025-10-24
+
+### Fixed
+
+- Container image build now correctly builds a multi-platform image
+
 ## [0.2.7] - 2025-10-24
 
 ### Fixed
@@ -107,7 +113,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Go programs for [client](./tui/main.go) and [server](./server/main.go)
 - GitHub Actions release flow, including binaries
 
-[unreleased]: https://github.com/supleed2/go-chat/compare/v0.2.6...HEAD
+[unreleased]: https://github.com/supleed2/go-chat/compare/v0.2.8...HEAD
+[0.2.8]: https://github.com/supleed2/go-chat/releases/tag/v0.2.8
+[0.2.7]: https://github.com/supleed2/go-chat/releases/tag/v0.2.7
 [0.2.6]: https://github.com/supleed2/go-chat/releases/tag/v0.2.6
 [0.2.5]: https://github.com/supleed2/go-chat/releases/tag/v0.2.5
 [0.2.4]: https://github.com/supleed2/go-chat/releases/tag/v0.2.4
